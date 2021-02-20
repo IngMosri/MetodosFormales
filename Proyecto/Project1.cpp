@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void alfabetoEntrada(string cadena);
+bool alfabetoEntrada(string cadena);
 void alfabetoSalida(string cadena);
 void conjuntoEstados(string cadena);
 void estadoInicio(string cadena);
@@ -88,10 +88,12 @@ int main() {
 return 0;
 }
 
-void alfabetoEntrada(string cadena){
+bool alfabetoEntrada(string cadena){
     //validacion del alfabeto que este separado correctame por comas
+    bool correcto = false;
     bool separacionComas = false; 
     bool alfaNumerico = false;
+    bool cardinalidad = true; 
     string caracter;
     for(int i = 0; i < cadena.length(); i++){
         if(cadena[i] == ','){
@@ -107,25 +109,52 @@ void alfabetoEntrada(string cadena){
         int i = 0;
         while(getline(streamAlfabeto, caracter, ',')){
             alfabetoEnter[i] = caracter;
+            i++;
 
         }
 
+        cout << alfabetoEnter[0] << endl;
+
 
         // validacion de alfabeto que sea Alfanumerico
+
         for(int i = 0; i <cadena.length(); i++) {
             for( int j = 0; j < alfabetoEnter[i].length(); j++ ){
                  if(isalpha(alfabetoEnter[i][j] || isdigit(alfabetoEnter[i][j]))) {
-                     alfaNumerico = true;
+                     alfaNumerico = true; 
 
                  }
 
             }
            
         }
+
+        if(alfaNumerico == true){
+            // validacion del alfabeto que sea de cardinalidad 1 
+        for(int i = 0; i < cadena.length(); i ++) {
+            if(alfabetoEnter[i].length() > 1) {
+                cardinalidad = false;
+                break;
+            }
+
+        }
+             if(cardinalidad == false) cout << "El alfabeto debe ser cardinalidad de 1. : \n";
+    
+        }else{
+            cout << " El alfabeto debe ser alfanumerico: \n";
+
+        }
+
+       
     } else{
         cout << "El alfabeto tiene que estar separado por comas: \n";
+        
     }
-
+        if(separacionComas && alfabetoSalida && cardinalidad){
+            correcto = true;
+            cout<< "Alfabeto de entrada es valido: \n";
+        }
+        return correcto;
 }
 
 void alfabetoSalida(string cadena){
