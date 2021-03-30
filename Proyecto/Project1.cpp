@@ -6,11 +6,11 @@
 using namespace std;
 
 bool alfabetoEntrada(string cadena);
-void alfabetoSalida(string cadena);
-void conjuntoEstados(string cadena);
-void estadoInicio(string cadena);
-void estadoAceptable(string cadena);
-void validacion(string cadena);
+bool alfabetoSalida(string cadena);
+bool conjuntoEstados(string cadena);
+bool estadoInicio(string cadena);
+bool estadoAceptable(string cadena);
+bool validacion(string cadena);
 
 string* alfabetoEnter = NULL;
 string* alfabetoExit = NULL;
@@ -32,7 +32,10 @@ int main() {
         string cadena;
         cout<< "Alfabeto de entrada : ";
         cin>> cadena;
-        alfabetoEntrada(cadena);
+        while(!alfabetoEntrada(cadena)){
+            cout<< "Alfabeto de entrada : ";
+            cin>> cadena;
+        };
         cout<< endl;
 
         cout<< "Alfabeto de salida : ";
@@ -96,10 +99,9 @@ bool alfabetoEntrada(string cadena){
     bool cardinalidad = true; 
     string caracter;
     for(int i = 0; i < cadena.length(); i++){
-        if(cadena[i] == ','){
-            separacionComas = true;
+        if(cadena[i] == ',') {
+            separacionComas = true; 
         }
-
 
     }
     if(separacionComas == true ){
@@ -107,29 +109,25 @@ bool alfabetoEntrada(string cadena){
         alfabetoEnter = new string [cadena.length()];
         istringstream streamAlfabeto(cadena);
         int i = 0;
-        while(getline(streamAlfabeto, caracter, ',')){
+        while(getline(streamAlfabeto, caracter, ',')) {
             alfabetoEnter[i] = caracter;
             i++;
 
         }
-
-        cout << alfabetoEnter[0] << endl;
-
-
-        // validacion de alfabeto que sea Alfanumerico
-
-        for(int i = 0; i <cadena.length(); i++) {
-            for( int j = 0; j < alfabetoEnter[i].length(); j++ ){
-                 if(isalpha(alfabetoEnter[i][j] || isdigit(alfabetoEnter[i][j]))) {
-                     alfaNumerico = true; 
-
-                 }
+            // validacion de alfabeto que sea Alfanumerico
+        for(int i = 0; i < cadena.length(); i++){
+            for(int j = 0; j < alfabetoEnter[i].length(); j++){
+                if(!(isalpha(alfabetoEnter[i][j]) && !(isdigit(alfabetoEnter[i][j])))) {
+                    alfaNumerico = false;
+                    break;
+                } else {
+                    alfaNumerico = true;
+                }
 
             }
-           
         }
-
-        if(alfaNumerico == true){
+           
+       if(alfaNumerico == true){
             // validacion del alfabeto que sea de cardinalidad 1 
         for(int i = 0; i < cadena.length(); i ++) {
             if(alfabetoEnter[i].length() > 1) {
@@ -150,28 +148,28 @@ bool alfabetoEntrada(string cadena){
         cout << "El alfabeto tiene que estar separado por comas: \n";
         
     }
-        if(separacionComas && alfabetoSalida && cardinalidad){
+        if(separacionComas && alfaNumerico && cardinalidad){
             correcto = true;
             cout<< "Alfabeto de entrada es valido: \n";
         }
         return correcto;
 }
 
-void alfabetoSalida(string cadena){
+bool alfabetoSalida(string cadena){
 
 }
 
-void conjuntoEstados(string cadena){
+bool conjuntoEstados(string cadena){
 
 }
 
-void estadoInicio(string cadena){
+ bool estadoInicio(string cadena){
 
 }
 
-void estadoAceptable(string cadena){
+bool estadoAceptable(string cadena){
 
 }
-void validacion(string cadena){
+bool validacion(string cadena){
 
 }
