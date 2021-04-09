@@ -2,6 +2,7 @@
 # include <sstream>
 # include <stdio.h>
 # include <ctype.h>
+# include <iomanip>
 
 using namespace std;
 
@@ -11,21 +12,28 @@ bool conjuntoEstados(string cadena);
 bool estadoInicio(string cadena);
 bool estadoAceptable(string cadena);
 bool validacion(string cadena);
+void CreateMatrixV();
+void CreateMatrixT();
 
 string* alfabetoEnter= NULL;
 string* alfabetoExit = NULL;
 string* estados = NULL;
 string* estadosAceptacion= NULL;
-string* estadoInicial;
+string estadoInicial;
+string** matrixv = NULL; 
+string** matrixt = NULL;
 int numerosEstados;
+int numeroalfabeto;
 
 int main() {
     cout<< "----------------------\n";
     cout<< "Automata Finito Determinista   \n";
     cout<< "Por favor indique el tipo de funcion\n";
-    cout<< "1.  AFD Validacion\n";
+    cout<< "1. AFD Validacion\n";
     cout<< "2. AFD Traduccion\n";
-    cout<< "funcion: *";
+    cout<< "3.Terminar Programa"; 
+    cout<< "Funcion:\n\n";
+    
     int funcion = 0;
     cin>> funcion;
     // funciones de validaciones 
@@ -67,9 +75,14 @@ int main() {
         }
         cout<< endl;
 
+        CreateMatrixV();
+
         cout<< "Palabra a validar   : ";
         cin>> cadena;
-        validacion(cadena);
+        while(!validacion(cadena)){
+            cout<< "Palabra a validar   : ";
+            cin>> cadena;
+        }
         cout<< endl;
 
 
@@ -103,15 +116,49 @@ int main() {
 
     }
 
-
-
-
-
 return 0;
 }
 
+void CreateMatrixV(){
+    bool correcto = false;
+    matrixv = new string *[numerosEstados];
+    for(int i = 0; i < numerosEstados; i++){
+        matrixv[i] = new string [numeroalfabeto];
+    }
+
+    cout<<"ingresar tabla de valadacion:";
+    cout<< "Estado" << setw(29) << "Alfabeto" << setw(22) << "Transicion" << endl; 
+    cout<< "____________________________________________________________";
+    for(int i = 0; i < numerosEstados; i++){
+        for(int j = 0; j <numeroalfabeto; j++){
+            
+            do{
+                cout<< estados[i] << setw(30) << alfabetoEnter[j] << setw(30) << "Transicion: ";
+                cin >> matrixv[i][j];
+                for(int k = 0; k < numerosEstados; k++){
+                    if(matrixv[i][j] == estados[k]){
+                        correcto = true;
+                        break;
+
+                    }else {
+                        
+                        correcto = false;
+                    }
+                }
+                if(!correcto) cout << "\n Estados no valido. \n";  
+
+            }while(!correcto);
+
+
+        }
+    }
+     
+}
+
+
 bool alfabetoEntrada(string cadena){
     //validacion del alfabeto que este separado correctame por comas
+    numeroalfabeto = cadena.length()/2+1;
     bool correcto = false;
     bool separacionComas = false; 
     bool alfaNumerico = true;
@@ -125,7 +172,7 @@ bool alfabetoEntrada(string cadena){
     }
     if(separacionComas == true ){
         // ingresar alfabeto del arreglo
-        alfabetoEnter = new string [cadena.length()/2+1];
+        alfabetoEnter = new string [numeroalfabeto];
         istringstream streamAlfabeto(cadena);
         int i = 0;
         while(getline(streamAlfabeto, caracter, ',')) {
@@ -134,7 +181,7 @@ bool alfabetoEntrada(string cadena){
 
         }
             // validacion de alfabeto que sea Alfanumerico
-        for(int i = 0; i < cadena.length()/2+1; i++){
+        for(int i = 0; i < numeroalfabeto; i++){
             for(int j = 0; j < alfabetoEnter[i].length(); j++){
                 if(isalpha(alfabetoEnter[i][j]) || isdigit(alfabetoEnter[i][j])) {
                     alfaNumerico = true;
@@ -148,7 +195,7 @@ bool alfabetoEntrada(string cadena){
            
        if(alfaNumerico == true){
             // validacion del alfabeto que sea de cardinalidad 1 
-        for(int i = 0; i < cadena.length()/2+1; i ++) {
+        for(int i = 0; i < numeroalfabeto; i ++) {
             if(alfabetoEnter[i].length() > 1) {
                 cardinalidad = false;
                 break;
@@ -409,6 +456,10 @@ bool estadoAceptable(string cadena){
 
 }
 bool validacion(string cadena){
+    string position = estadoInicial;
+    int x = numerosEstados;
+    int y = numeroalfabeto;
+
     
     return false;
 
