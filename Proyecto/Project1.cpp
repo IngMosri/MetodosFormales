@@ -24,6 +24,7 @@ string** matrixv = NULL;
 string** matrixt = NULL;
 int numerosEstados;
 int numeroalfabeto;
+int estadoNumericoAceptable;
 
 int main() {
     cout<< "----------------------\n";
@@ -77,13 +78,20 @@ int main() {
 
         CreateMatrixV();
 
-        cout<< "Palabra a validar   : ";
-        cin>> cadena;
-        while(!validacion(cadena)){
-            cout<< "Palabra a validar   : ";
-            cin>> cadena;
-        }
-        cout<< endl;
+        
+            int finishValidation;
+            do{
+                cout<< "Palabra a validar   : ";
+                cin>> cadena;
+                while(!validacion(cadena)){
+                cout<< "Palabra a validar   : ";
+                cin>> cadena;
+ 
+            }
+                cout << "Deseas validar otra palabra? si [1]-- no [2]:";
+                cin >> finishValidation; 
+        }while (finishValidation != 2);
+                cout<< endl;
 
 
         delete [] alfabetoEnter;
@@ -382,6 +390,7 @@ bool conjuntoEstados(string cadena){
         correcto = false;
     }else {
         cout<< "el estado de inicial es valido. \n\n";
+        estadoInicial = cadena;
         correcto = true;
     }
 
@@ -408,6 +417,7 @@ bool estadoAceptable(string cadena){
         
         }
         if(multipleStatesTrue){
+            estadoNumericoAceptable = (int)cadena.length() / 2+1;
             //rompemos la cadena en varios estados de aceptacion 
             istringstream streamAlfabeto(cadena);
             estadosAceptacion = new string[cadena.length()/2+1];
@@ -435,6 +445,7 @@ bool estadoAceptable(string cadena){
             if(!equals) cout<< "Los estados de aceptacion deben pertenercer a los estados del AFD. \n\n"; 
 
         }else {
+            estadoNumericoAceptable = 1;
             for (int i =0; i < numerosEstados; i++ ){
         if(cadena == estados[i]){
             estadosAceptacion = new string[1];
@@ -456,11 +467,61 @@ bool estadoAceptable(string cadena){
 
 }
 bool validacion(string cadena){
+    bool validacionPalabra = false;
     string position = estadoInicial;
-    int x = numerosEstados;
-    int y = numeroalfabeto;
+    bool correcto = false;
+    int x = 0;
+    int y =0;
+
+    cout << cadena.length() << endl;
+
+    for(int i = 0; i < cadena.length(); i++){
+        correcto = false;
+        for(int j = 0; j < numerosEstados; j++){
+            cout << "posicion: " << position << " estado: " << estados[j] << endl;
+
+            if(position == estados[j]){
+                x = j;
+                correcto = true;
+                break;
+            }
+        }
+        for (int k=0; k< numeroalfabeto; k++ ){
+            //cout << "cadena[]: " << position << " estado: " << estados[j] << endl;
+            if(cadena[i] == alfabetoEnter[k][0]){
+                y = k;
+                correcto = true;
+                break;
+            }
+            
+        }
+        if(!correcto) {
+            cout<< "Palabra contiene simboloes que no estan en el alfabeto de entrada.\n\n";
+        }else{
+                cout << x << " " << y << endl;
+                position = matrixv[x][y];
+        }
+    }   
+                
+        for(int i = 0; i < estadoNumericoAceptable; i++){
+            if(position == estadosAceptacion[i]){
+                validacionPalabra = true;
+                break;
+            }else {
+                validacionPalabra = false;
+            }
+
+        }
+
+
+        cout << "La palabra" << cadena << "es ";
+        if(validacionPalabra){
+            cout << "Palabra valida\n";
+        } else {
+            cout << "Palabra invalida\n";
+        }
 
     
-    return false;
+    return correcto;
 
 }
