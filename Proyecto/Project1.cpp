@@ -3,7 +3,9 @@
 # include <stdio.h>
 # include <ctype.h>
 # include <iomanip>
-
+# include <signal.h>
+#include <csignal>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -39,7 +41,13 @@ int totalinvalidas = 0;
 int localtotaltraducidas = 0;
 int localtotalvalidas = 0; 
 int localtotalinvalidas = 0;
+
+
+
+
 int main() {
+    
+
 
     cout<< setw(-40) << "Morgoth Systems" << setw(20) << "||Autor: Cristian Alatorre " << setw(10) << "||Autómata  finito determinista: AFD " << endl; 
 
@@ -50,6 +58,8 @@ int main() {
     cout<< "2. AFD Traduccion\n";
     cout<< "3.Terminar Programa\n"; 
     cout<< "Funcion:";
+
+          
     
     int funcion = 0;
     cin>> funcion;
@@ -92,9 +102,10 @@ int main() {
         }
         cout<< endl;
 
-
+         
 // generacion de la matriz de validacion 
         CreateMatrixV();
+        
 
         
             int finishValidation;
@@ -120,6 +131,8 @@ int main() {
 
                 localtotalvalidas = 0;
                 localtotalinvalidas = 0;
+
+                
 
 
 // Se librera la memoria utilizada por apuntadores 
@@ -178,7 +191,6 @@ int main() {
         cout<< endl;
 //matriz de validacion y traduccion 
         CreateMatrixV();
-        CreateMatrixV();
 
         
             int finishValidation;
@@ -195,6 +207,7 @@ int main() {
         }while (finishValidation != 2);
         
                 cout<< endl;
+
                 cout << "EL total de palabras para este AFD fue: \n"<< localtotalvalidas + localtotalinvalidas <<endl;
                 cout << "Traducciones: " << localtotaltraducidas << endl;
                 cout << "Validas: " << localtotalvalidas<< endl;
@@ -215,7 +228,7 @@ int main() {
          delete[] matrixt[i];
      }
         delete [] matrixt;
-        matrixv = 0;
+        matrixt = 0;
         delete [] alfabetoEnter;
         alfabetoEnter = 0;
         delete [] alfabetoExit;
@@ -224,25 +237,22 @@ int main() {
         estados = 0; 
         delete [] estadosAceptacion;
         estadosAceptacion = 0;
+        delete [] traduction;
+        traduction = 0;
 
 
     }
     
     //salir
-    if( funcion == 3){
+    if( funcion ==3){
         cout << "El total de AFD reistradas fue : " << totalPalabras << endl;
         cout << "El total de palabras tradcidas fue: " << totalTraducidas << endl;
         cout << "El total de palabras validas  fue: " << totalvalidas<< endl;
         cout << "El total de palabras invalidas  fue: " << totalinvalidas<< endl;
 
-    }
-    {
-        cin.ignore();
-    }
-
-while (funcion != 3); 
-
-return 0;
+    }while (funcion != 3);
+    return 0; 
+    
 }
 
 void CreateMatrixV(){
@@ -317,6 +327,8 @@ void createMatrixT(){
 }
 
 
+
+ 
 bool alfabetoEntrada(string cadena){
     cout<< setw(-40) << "Morgoth Systems" << setw(20) << "||Autor: Cristian Alatorre " << setw(10) << "||Autómata  finito determinista: AFD " << endl; 
 
@@ -703,7 +715,10 @@ bool validacion(string cadena, bool traducir){
 
         }
 
+        delete [] traduction;
+        traduction = 0;
+
     
-    return main;
+    return correcto;
 
 }
