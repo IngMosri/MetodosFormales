@@ -27,13 +27,16 @@ int numeroalfabeto;
 int estadoNumericoAceptable;
 
 int main() {
-    cout<< "----------------------\n";
+
+    cout<< setw(-40) << "Morgoth Systems" << setw(20) << "||Autor: Cristian Alatorre " << setw(10) << "||Autómata  finito determinista: AFD " << endl; 
+
+    cout<< "----------------------\n\n\n";
     cout<< "Automata Finito Determinista   \n";
     cout<< "Por favor indique el tipo de funcion\n";
     cout<< "1. AFD Validacion\n";
     cout<< "2. AFD Traduccion\n";
-    cout<< "3.Terminar Programa"; 
-    cout<< "Funcion:\n\n";
+    cout<< "3.Terminar Programa\n"; 
+    cout<< "Funcion:";
     
     int funcion = 0;
     cin>> funcion;
@@ -165,6 +168,9 @@ void CreateMatrixV(){
 
 
 bool alfabetoEntrada(string cadena){
+    cout<< setw(-40) << "Morgoth Systems" << setw(20) << "||Autor: Cristian Alatorre " << setw(10) << "||Autómata  finito determinista: AFD " << endl; 
+
+    cout<< "----------------------\n\n\n";
     //validacion del alfabeto que este separado correctame por comas
     numeroalfabeto = cadena.length()/2+1;
     bool correcto = false;
@@ -230,6 +236,9 @@ bool alfabetoEntrada(string cadena){
 }
 
 bool alfabetoSalida(string cadena){
+    cout<< setw(-40) << "Morgoth Systems" << setw(20) << "||Autor: Cristian Alatorre " << setw(10) << "||Autómata  finito determinista: AFD " << endl; 
+
+    cout<< "----------------------\n\n\n";
      //validacion del alfabeto que este separado correctame por comas
     bool correcto = false;
     bool separacionComas = false; 
@@ -295,6 +304,9 @@ bool alfabetoSalida(string cadena){
 }
 
 bool conjuntoEstados(string cadena){
+    cout<< setw(-40) << "Morgoth Systems" << setw(20) << "||Autor: Cristian Alatorre " << setw(10) << "||Autómata  finito determinista: AFD " << endl; 
+
+    cout<< "----------------------\n\n\n";
     string estado;
     numerosEstados = (int)cadena.length()/2+1;
     bool correcto = false;
@@ -366,6 +378,9 @@ bool conjuntoEstados(string cadena){
 }
 
  bool estadoInicio(string cadena){
+     cout<< setw(-40) << "Morgoth Systems" << setw(20) << "||Autor: Cristian Alatorre " << setw(10) << "||Autómata  finito determinista: AFD " << endl; 
+
+    cout<< "----------------------\n\n\n";
      bool correcto = false;
      bool equals = false;
      bool multiples = true;
@@ -404,6 +419,9 @@ bool conjuntoEstados(string cadena){
 }
 
 bool estadoAceptable(string cadena){
+    cout<< setw(-40) << "Morgoth Systems" << setw(20) << "||Autor: Cristian Alatorre " << setw(10) << "||Autómata  finito determinista: AFD " << endl; 
+
+    cout<< "----------------------\n\n\n";
     bool correcto =false;
     bool equals = false;
     bool multipleStatesTrue = true;
@@ -467,18 +485,18 @@ bool estadoAceptable(string cadena){
 
 }
 bool validacion(string cadena){
+    cout<< setw(-40) << "Morgoth Systems" << setw(20) << "||Autor: Cristian Alatorre " << setw(10) << "||Autómata  finito determinista: AFD " << endl; 
+
+    cout<< "----------------------\n\n\n";
     bool validacionPalabra = false;
     string position = estadoInicial;
     bool correcto = false;
     int x = 0;
     int y =0;
 
-    cout << cadena.length() << endl;
-
     for(int i = 0; i < cadena.length(); i++){
         correcto = false;
         for(int j = 0; j < numerosEstados; j++){
-            cout << "posicion: " << position << " estado: " << estados[j] << endl;
 
             if(position == estados[j]){
                 x = j;
@@ -487,7 +505,6 @@ bool validacion(string cadena){
             }
         }
         for (int k=0; k< numeroalfabeto; k++ ){
-            //cout << "cadena[]: " << position << " estado: " << estados[j] << endl;
             if(cadena[i] == alfabetoEnter[k][0]){
                 y = k;
                 correcto = true;
@@ -498,7 +515,6 @@ bool validacion(string cadena){
         if(!correcto) {
             cout<< "Palabra contiene simboloes que no estan en el alfabeto de entrada.\n\n";
         }else{
-                cout << x << " " << y << endl;
                 position = matrixv[x][y];
         }
     }   
