@@ -4,28 +4,41 @@
 # include <ctype.h>
 # include <iomanip>
 
+
 using namespace std;
 
+//Funciones 
 bool alfabetoEntrada(string cadena);
 bool alfabetoSalida(string cadena);
 bool conjuntoEstados(string cadena);
 bool estadoInicio(string cadena);
 bool estadoAceptable(string cadena);
-bool validacion(string cadena);
+bool validacion(string cadena, bool traducir);
 void CreateMatrixV();
 void CreateMatrixT();
 
+//Apuntadores 
 string* alfabetoEnter= NULL;
 string* alfabetoExit = NULL;
 string* estados = NULL;
 string* estadosAceptacion= NULL;
+string* traduction = NULL;
 string estadoInicial;
 string** matrixv = NULL; 
 string** matrixt = NULL;
+
+//Variables globales 
 int numerosEstados;
 int numeroalfabeto;
 int estadoNumericoAceptable;
-
+int numerosalida;
+int totalPalabras = 0; 
+int totalTraducidas = 0;
+int totalvalidas = 0; 
+int totalinvalidas = 0; 
+int localtotaltraducidas = 0;
+int localtotalvalidas = 0; 
+int localtotalinvalidas = 0;
 int main() {
 
     cout<< setw(-40) << "Morgoth Systems" << setw(20) << "||Autor: Cristian Alatorre " << setw(10) << "||Autómata  finito determinista: AFD " << endl; 
@@ -79,6 +92,8 @@ int main() {
         }
         cout<< endl;
 
+
+// generacion de la matriz de validacion 
         CreateMatrixV();
 
         
@@ -86,7 +101,7 @@ int main() {
             do{
                 cout<< "Palabra a validar   : ";
                 cin>> cadena;
-                while(!validacion(cadena)){
+                while(!validacion(cadena, false)){
                 cout<< "Palabra a validar   : ";
                 cin>> cadena;
  
@@ -95,8 +110,24 @@ int main() {
                 cin >> finishValidation; 
         }while (finishValidation != 2);
                 cout<< endl;
+                cout << "EL total de palabras para este AFD fue: \n"<< localtotalvalidas + localtotalinvalidas <<endl;
+                cout << "Validas: " << localtotalvalidas << endl;
+                cout << "Invalidas: " << localtotalinvalidas << endl;
+                //SUmamos las variables totales globales y regresamos las locales a cero
+                totalPalabras++;
+                totalvalidas = totalvalidas + localtotalvalidas;
+                totalinvalidas = totalinvalidas + localtotalinvalidas;
+
+                localtotalvalidas = 0;
+                localtotalinvalidas = 0;
 
 
+// Se librera la memoria utilizada por apuntadores 
+     for ( int i = 0; i < numerosEstados; i++){
+         delete[] matrixv[i];
+     }
+        delete [] matrixv;
+        matrixv = 0;
         delete [] alfabetoEnter;
         alfabetoEnter = 0;
         delete [] alfabetoExit;
@@ -118,14 +149,98 @@ int main() {
 
         }
         cout<< endl;
+    
+
+        cout<< "conjunto de Estados: ";
+        cin>> cadena;
+        while(!conjuntoEstados(cadena)){
+            cout<< "conjunto de Estados: ";
+            cin>> cadena;
+
+        }
+        cout<< endl;
+
+        cout<< "Estado de inicio : ";
+        cin>> cadena;
+        while(!estadoInicio(cadena)){
+            cout<< "Estado de inicio : ";
+            cin>> cadena;
+
+        }
+        cout<< endl;
+
+        cout<< "Estado de aceptacion  : ";
+        cin>> cadena;
+        while(!estadoAceptable(cadena)){
+            cout<< "Estado de aceptacion  : ";
+            cin>> cadena;
+        }
+        cout<< endl;
+//matriz de validacion y traduccion 
+        CreateMatrixV();
+        CreateMatrixV();
+
         
+            int finishValidation;
+            do{
+                cout<< "Palabra a traducir   : ";
+                cin>> cadena;
+                while(!validacion(cadena, true)){
+                cout<< "Palabra a traducir    : ";
+                cin>> cadena;
+ 
+            }
+                cout << "Deseas validar otra palabra? si [1]-- no [2]:";
+                cin >> finishValidation; 
+        }while (finishValidation != 2);
+        
+                cout<< endl;
+                cout << "EL total de palabras para este AFD fue: \n"<< localtotalvalidas + localtotalinvalidas <<endl;
+                cout << "Traducciones: " << localtotaltraducidas << endl;
+                cout << "Validas: " << localtotalvalidas<< endl;
+                //SUmamos las variables totales globales y regresamos las locales a cero
+                totalPalabras++;
+                totalvalidas = totalvalidas + localtotalvalidas;
+                totalinvalidas = totalinvalidas + localtotalinvalidas;
+                totalTraducidas = totalTraducidas + localtotaltraducidas;
+
+                localtotalvalidas = 0;
+                localtotalinvalidas = 0;
+                localtotaltraducidas = 0;
+                
+
+
+
+        for ( int i = 0; i < numerosEstados; i++){
+         delete[] matrixt[i];
+     }
+        delete [] matrixt;
+        matrixv = 0;
+        delete [] alfabetoEnter;
+        alfabetoEnter = 0;
+        delete [] alfabetoExit;
+        alfabetoExit = 0;
+        delete [] estados;
+        estados = 0; 
+        delete [] estadosAceptacion;
+        estadosAceptacion = 0;
+
 
     }
-    // funcion para salir 
-    if(funcion != 1 && funcion != 2) {
-
+    
+    //salir
+    if( funcion == 3){
+        cout << "El total de AFD reistradas fue : " << totalPalabras << endl;
+        cout << "El total de palabras tradcidas fue: " << totalTraducidas << endl;
+        cout << "El total de palabras validas  fue: " << totalvalidas<< endl;
+        cout << "El total de palabras invalidas  fue: " << totalinvalidas<< endl;
 
     }
+    {
+        cin.ignore();
+    }
+
+while (funcion != 3); 
 
 return 0;
 }
@@ -164,6 +279,41 @@ void CreateMatrixV(){
         }
     }
      
+}
+void createMatrixT(){
+    bool correcto = false;
+    matrixt = new string *[numerosEstados];
+    for(int i = 0; i < numerosEstados; i++){
+        matrixt[i] = new string [numeroalfabeto];
+    }
+
+    cout<<"ingresar tabla de traduccion:";
+    cout<< "Estado" << setw(29) << "Alfabeto" << setw(22) << "Salida" << endl; 
+    cout<< "____________________________________________________________";
+    for(int i = 0; i < numerosEstados; i++){
+        for(int j = 0; j <numeroalfabeto; j++){
+            
+            do{
+                cout<< estados[i] << setw(30) << alfabetoEnter[j] << setw(30) << "Salida: ";
+                cin >> matrixt[i][j];
+                for(int k = 0; k < numeroalfabeto; k++){
+                    if(matrixt[i][j] == alfabetoEnter[k]){
+                        correcto = true;
+                        break;
+
+                    }else {
+                        
+                        correcto = false;
+                    }
+                }
+                if(!correcto) cout << "\n Alfabeto no valido. \n";  
+
+            }while(!correcto);
+
+
+        }
+    }
+
 }
 
 
@@ -216,7 +366,7 @@ bool alfabetoEntrada(string cadena){
             }
 
         }
-             if(cardinalidad == false) cout << "El alfabeto debe ser cardinalidad de 1. : \n";
+             if(cardinalidad == false) cout << "El alfabeto debe ser cardinalidad de 1. : \n\n";
     
         }else{
             cout << " El alfabeto debe ser alfanumerico: \n";
@@ -225,12 +375,12 @@ bool alfabetoEntrada(string cadena){
 
        
     } else{
-        cout << "El alfabeto tiene que estar separado por comas: \n";
+        cout << "El alfabeto tiene que estar separado por comas: \n\n";
         
     }
         if(separacionComas && alfaNumerico && cardinalidad){
             correcto = true;
-            cout<< "Alfabeto de entrada es valido: \n";
+            cout<< "Alfabeto de entrada es valido: \n\n";
         }
         return correcto;
 }
@@ -283,21 +433,21 @@ bool alfabetoSalida(string cadena){
             }
 
         }
-             if(cardinalidad == false) cout << "El alfabeto debe ser cardinalidad de 1. : \n";
+             if(cardinalidad == false) cout << "El alfabeto debe ser cardinalidad de 1. : \n\n";
     
         }else{
-            cout << " El alfabeto debe ser alfanumerico: \n";
+            cout << " El alfabeto debe ser alfanumerico: \n\n";
 
         }
 
        
     } else{
-        cout << "El alfabeto tiene que estar separado por comas: \n";
+        cout << "El alfabeto tiene que estar separado por comas: \n\n";
         
     }
         if(separacionComas && alfaNumerico && cardinalidad){
             correcto = true;
-            cout<< "Alfabeto de salida es valido: \n";
+            cout<< "Alfabeto de salida es valido: \n\n";
         }
         return correcto;
 
@@ -484,15 +634,17 @@ bool estadoAceptable(string cadena){
     return correcto;
 
 }
-bool validacion(string cadena){
+bool validacion(string cadena, bool traducir){
     cout<< setw(-40) << "Morgoth Systems" << setw(20) << "||Autor: Cristian Alatorre " << setw(10) << "||Autómata  finito determinista: AFD " << endl; 
 
     cout<< "----------------------\n\n\n";
+    traduction = new string[cadena.length()];
     bool validacionPalabra = false;
     string position = estadoInicial;
     bool correcto = false;
     int x = 0;
     int y =0;
+    
 
     for(int i = 0; i < cadena.length(); i++){
         correcto = false;
@@ -513,11 +665,12 @@ bool validacion(string cadena){
             
         }
         if(!correcto) {
-            cout<< "Palabra contiene simboloes que no estan en el alfabeto de entrada.\n\n";
+            cout<< "Palabra contiene simbolos que no estan en el alfabeto de entrada.\n\n";
         }else{
                 position = matrixv[x][y];
-        }
-    }   
+                if(traduction) traduction[i] = matrixv[x][y];
+            }
+        } 
                 
         for(int i = 0; i < estadoNumericoAceptable; i++){
             if(position == estadosAceptacion[i]){
@@ -529,15 +682,28 @@ bool validacion(string cadena){
 
         }
 
-
-        cout << "La palabra" << cadena << "es ";
+        if(correcto){
+            cout << "La palabra" << cadena << "es ";
         if(validacionPalabra){
-            cout << "Palabra valida\n";
+            cout << "Palabra valida\n\n";
+            localtotalvalidas ++;
         } else {
-            cout << "Palabra invalida\n";
+            cout << "Palabra invalida\n\n";
+            localtotalinvalidas++;
+
+        }
+        if(traducir){
+            localtotaltraducidas++;
+            cout << " Su traduccion es ";
+            for(int i =0; i< cadena.length(); i++){
+                cout<< traduction[i];
+            }
+            cout<< endl;
+        }
+
         }
 
     
-    return correcto;
+    return main;
 
 }
